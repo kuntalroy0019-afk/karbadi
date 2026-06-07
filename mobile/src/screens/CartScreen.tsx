@@ -40,6 +40,9 @@ export default function CartScreen() {
   }
 
   const items = cart?.items ?? [];
+  const subtotal = Number(cart?.subtotal || 0);
+  const gst = Math.round(subtotal * 0.18);
+  const total = subtotal + gst;
 
   return (
     <View style={{ flex: 1, backgroundColor: colors.bg, paddingTop: insets.top + spacing.sm }}>
@@ -76,10 +79,22 @@ export default function CartScreen() {
           <View style={styles.summary}>
             <View style={styles.summaryRow}>
               <Text style={styles.summaryLabel}>Subtotal ({cart?.item_count} items)</Text>
-              <Text style={styles.summaryValue}>{formatINR(cart?.subtotal)}</Text>
+              <Text style={styles.summaryLineValue}>{formatINR(subtotal)}</Text>
             </View>
-            <Text style={styles.note}>Shipping calculated at checkout via smart courier select.</Text>
-            <Button title="Proceed to Checkout" icon="arrow-forward" onPress={() => nav.navigate("Checkout")} />
+            <View style={styles.summaryRow}>
+              <Text style={styles.summaryLabel}>Shipping</Text>
+              <Text style={styles.summaryLineValue}>at checkout</Text>
+            </View>
+            <View style={styles.summaryRow}>
+              <Text style={styles.summaryLabel}>GST (18%)</Text>
+              <Text style={styles.summaryLineValue}>{formatINR(gst)}</Text>
+            </View>
+            <View style={styles.summaryDivider} />
+            <View style={styles.summaryRow}>
+              <Text style={styles.totalLabel}>Total</Text>
+              <Text style={styles.summaryValue}>{formatINR(total)}</Text>
+            </View>
+            <Button title="Proceed to Checkout" icon="arrow-forward" onPress={() => nav.navigate("Checkout")} style={{ marginTop: spacing.md }} />
           </View>
         </>
       )}
@@ -97,8 +112,10 @@ const styles = StyleSheet.create({
   stepBtn: { width: 32, height: 32, borderRadius: radius.sm, backgroundColor: colors.primaryLight, alignItems: "center", justifyContent: "center" },
   qty: { fontWeight: "800", color: colors.text, minWidth: 20, textAlign: "center" },
   summary: { position: "absolute", bottom: 0, left: 0, right: 0, backgroundColor: colors.surface, padding: spacing.lg, borderTopLeftRadius: radius.xl, borderTopRightRadius: radius.xl, ...shadow.card, gap: spacing.sm },
-  summaryRow: { flexDirection: "row", justifyContent: "space-between", alignItems: "center" },
-  summaryLabel: { color: colors.textMuted, fontWeight: "600" },
-  summaryValue: { fontSize: font.h2, fontWeight: "900", color: colors.text },
-  note: { color: colors.textMuted, fontSize: font.tiny, marginBottom: spacing.sm },
+  summaryRow: { flexDirection: "row", justifyContent: "space-between", alignItems: "center", marginVertical: 3 },
+  summaryLabel: { color: colors.textMuted, fontWeight: "500" },
+  summaryLineValue: { color: colors.text, fontWeight: "600" },
+  summaryDivider: { height: 1, backgroundColor: colors.border, marginVertical: spacing.sm },
+  totalLabel: { color: colors.text, fontWeight: "800", fontSize: font.body },
+  summaryValue: { fontSize: font.h2, fontWeight: "800", color: colors.accent },
 });

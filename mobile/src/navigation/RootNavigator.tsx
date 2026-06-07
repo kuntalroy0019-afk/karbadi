@@ -49,10 +49,10 @@ export default function RootNavigator() {
       <Stack.Screen name="Tabs" component={TabNavigator} options={{ headerShown: false }} />
       <Stack.Screen name="Login" component={LoginScreen} options={{ headerShown: false }} />
       <Stack.Screen name="Register" component={RegisterScreen} options={{ title: "Create Account" }} />
-      <Stack.Screen name="PartDetail" component={PartDetailScreen} options={{ title: "Part Details" }} />
+      <Stack.Screen name="PartDetail" component={PartDetailScreen} options={{ title: "Product Overview" }} />
       <Stack.Screen name="PartSearch" component={SearchScreen} options={{ title: "Search Parts" }} />
       <Stack.Screen name="CategoryParts" component={CategoryPartsScreen} options={({ route }) => ({ title: route.params.name })} />
-      <Stack.Screen name="SellerProfile" component={SellerProfileScreen} options={{ title: "Vendor" }} />
+      <Stack.Screen name="SellerProfile" component={SellerProfileScreen} options={{ title: "Vendor Profile" }} />
       <Stack.Screen name="Vendors" component={VendorsScreen} options={{ title: "Vendors" }} />
       <Stack.Screen name="Vehicles" component={VehiclesScreen} options={{ title: "Buy / Sell Vehicles" }} />
       <Stack.Screen name="VehicleDetail" component={VehicleDetailScreen} options={{ title: "Vehicle" }} />
