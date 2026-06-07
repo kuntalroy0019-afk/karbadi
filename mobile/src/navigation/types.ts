@@ -7,6 +7,8 @@ export type RootStackParamList = {
   SellerProfile: { id: number; name?: string };
   Vehicles: undefined;
   VehicleDetail: { id: number; title?: string };
+  VehicleForm: { id?: number };
+  MyVehicles: undefined;
   OemSearch: undefined;
   OemPartDetail: { id: number; oem_number?: string };
   OrderDetail: { id: number };

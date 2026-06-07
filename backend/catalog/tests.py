@@ -2,7 +2,7 @@
 from rest_framework import status
 from rest_framework.test import APITestCase
 
-from catalog.models import Part
+from catalog.models import Part, VehicleListing
 from karbadi.testutils import (
     auth_client,
     make_brand,
@@ -157,9 +157,37 @@ class VehicleTests(APITestCase):
         self.assertEqual(resp.data["count"], 1)
         self.assertEqual(resp.data["results"][0]["title"], "Nexon 2020")
 
-    def test_buyer_cannot_create_vehicle(self):
-        client = auth_client(make_user(role="buyer"))
-        resp = client.post("/api/catalog/vehicles/", {
-            "title": "x", "model_name": "y", "year": 2020, "price": "1",
-        }, format="json")
-        self.assertEqual(resp.status_code, status.HTTP_403_FORBIDDEN)
+    _payload = {"title": "My Swift", "model_name": "Swift", "year": 2019,
+                "price": "450000", "fuel_type": "petrol", "km_driven": 30000, "city": "Pune"}
+
+    def test_anonymous_cannot_create_vehicle(self):
+        resp = self.client.post("/api/catalog/vehicles/", self._payload, format="json")
+        self.assertEqual(resp.status_code, status.HTTP_401_UNAUTHORIZED)
+
+    def test_any_logged_in_user_can_sell_vehicle_c2c(self):
+        # A regular BUYER can list their own car (peer-to-peer).
+        buyer = make_user(role="buyer")
+        resp = auth_client(buyer).post("/api/catalog/vehicles/", self._payload, format="json")
+        self.assertEqual(resp.status_code, status.HTTP_201_CREATED)
+        self.assertEqual(VehicleListing.objects.get(id=resp.data["id"]).seller, buyer)
+
+    def test_owner_can_edit_buyer_cannot_edit_others_vehicle(self):
+        owner = make_user(role="buyer")
+        listing = make_vehicle(owner, title="Owner Car")
+        # someone else can't edit it
+        intruder = make_user(role="buyer")
+        r1 = auth_client(intruder).patch(f"/api/catalog/vehicles/{listing.id}/",
+                                         {"price": "1"}, format="json")
+        self.assertEqual(r1.status_code, status.HTTP_403_FORBIDDEN)
+        # owner can
+        r2 = auth_client(owner).patch(f"/api/catalog/vehicles/{listing.id}/",
+                                      {"price": "399000"}, format="json")
+        self.assertEqual(r2.status_code, status.HTTP_200_OK)
+
+    def test_my_vehicle_listings(self):
+        me = make_user(role="buyer")
+        make_vehicle(me, title="Mine")
+        make_vehicle(make_user(role="buyer"), title="Theirs")
+        resp = auth_client(me).get("/api/catalog/vehicles/my-listings/")
+        titles = [v["title"] for v in resp.data["results"]]
+        self.assertEqual(titles, ["Mine"])

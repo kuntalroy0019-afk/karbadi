@@ -4,7 +4,7 @@ from rest_framework.decorators import action
 from rest_framework.response import Response
 
 from .models import Brand, Category, Part, VehicleListing
-from .permissions import IsSellerOrReadOnly
+from .permissions import IsOwnerOrReadOnly, IsSellerOrReadOnly
 from .serializers import (
     BrandSerializer,
     CategorySerializer,
@@ -72,7 +72,8 @@ class VehicleViewSet(viewsets.ModelViewSet):
     queryset = VehicleListing.objects.filter(is_active=True).select_related(
         "brand", "seller"
     ).prefetch_related("images")
-    permission_classes = [IsSellerOrReadOnly]
+    # C2C: any logged-in user can list their own vehicle; owner-only edits.
+    permission_classes = [IsOwnerOrReadOnly]
     filterset_fields = ["brand", "fuel_type", "year", "is_sold", "city"]
     search_fields = ["title", "model_name", "description", "city"]
     ordering_fields = ["price", "year", "km_driven", "created_at"]
@@ -83,3 +84,12 @@ class VehicleViewSet(viewsets.ModelViewSet):
         if self.action == "retrieve":
             return VehicleDetailSerializer
         return VehicleListSerializer
+
+    @action(detail=False, methods=["get"], url_path="my-listings",
+            permission_classes=[permissions.IsAuthenticated])
+    def my_listings(self, request):
+        """The current user's own vehicle listings (incl. sold/inactive)."""
+        qs = VehicleListing.objects.filter(seller=request.user).prefetch_related("images")
+        page = self.paginate_queryset(qs)
+        ser = VehicleListSerializer(page, many=True, context={"request": request})
+        return self.get_paginated_response(ser.data)

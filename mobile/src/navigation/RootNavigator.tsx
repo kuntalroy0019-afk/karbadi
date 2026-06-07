@@ -19,7 +19,9 @@ import SellerDashboardScreen from "../screens/SellerDashboardScreen";
 import SellerProfileScreen from "../screens/SellerProfileScreen";
 import TrackingScreen from "../screens/TrackingScreen";
 import VehicleDetailScreen from "../screens/VehicleDetailScreen";
+import VehicleFormScreen from "../screens/VehicleFormScreen";
 import VehiclesScreen from "../screens/VehiclesScreen";
+import MyVehiclesScreen from "../screens/MyVehiclesScreen";
 import { colors } from "../theme";
 import TabNavigator from "./TabNavigator";
 import { RootStackParamList } from "./types";
@@ -46,6 +48,8 @@ export default function RootNavigator() {
       <Stack.Screen name="SellerProfile" component={SellerProfileScreen} options={{ title: "Seller" }} />
       <Stack.Screen name="Vehicles" component={VehiclesScreen} options={{ title: "Buy / Sell Vehicles" }} />
       <Stack.Screen name="VehicleDetail" component={VehicleDetailScreen} options={{ title: "Vehicle" }} />
+      <Stack.Screen name="VehicleForm" component={VehicleFormScreen} options={({ route }) => ({ title: route.params?.id ? "Edit Vehicle" : "Sell Your Vehicle" })} />
+      <Stack.Screen name="MyVehicles" component={MyVehiclesScreen} options={{ title: "My Vehicle Listings" }} />
       <Stack.Screen name="OemSearch" component={OemSearchScreen} options={{ title: "OEM Part Finder" }} />
       <Stack.Screen name="OemPartDetail" component={OemPartDetailScreen} options={{ title: "OEM Part" }} />
       <Stack.Screen name="OrderDetail" component={OrderDetailScreen} options={{ title: "Order" }} />

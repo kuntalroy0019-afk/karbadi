@@ -61,6 +61,16 @@ export const Catalog = {
   vehicles: (params?: Record<string, any>) =>
     api.get<Paginated<VehicleListing>>("/catalog/vehicles/", { params }),
   vehicle: (id: number) => api.get<VehicleListing>(`/catalog/vehicles/${id}/`),
+  myVehicles: () => api.get<Paginated<VehicleListing>>("/catalog/vehicles/my-listings/"),
+  createVehicle: (payload: FormData) =>
+    api.post<VehicleListing>("/catalog/vehicles/", payload, {
+      headers: { "Content-Type": "multipart/form-data" },
+    }),
+  updateVehicle: (id: number, payload: FormData) =>
+    api.patch<VehicleListing>(`/catalog/vehicles/${id}/`, payload, {
+      headers: { "Content-Type": "multipart/form-data" },
+    }),
+  deleteVehicle: (id: number) => api.delete(`/catalog/vehicles/${id}/`),
 };
 
 // --- OEM (Module 3) ------------------------------------------------------

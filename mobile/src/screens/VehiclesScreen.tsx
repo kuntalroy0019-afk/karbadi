@@ -26,12 +26,25 @@ export default function VehiclesScreen() {
   if (loading) return <Loading label="Loading vehicles…" />;
 
   return (
+    <View style={{ flex: 1, backgroundColor: colors.bg }}>
     <FlatList
       style={{ backgroundColor: colors.bg }}
       data={vehicles}
       keyExtractor={(v) => String(v.id)}
-      contentContainerStyle={{ padding: spacing.lg, gap: spacing.md }}
-      ListEmptyComponent={<EmptyState icon="car-outline" title="No vehicles listed" />}
+      contentContainerStyle={{ padding: spacing.lg, gap: spacing.md, paddingBottom: 90 }}
+      ListHeaderComponent={
+        <View style={styles.actionRow}>
+          <Pressable style={[styles.actionBtn, styles.sellBtn]} onPress={() => nav.navigate("VehicleForm", {})}>
+            <Ionicons name="pricetag-outline" size={18} color={colors.white} />
+            <Text style={styles.sellText}>Sell your vehicle</Text>
+          </Pressable>
+          <Pressable style={[styles.actionBtn, styles.mineBtn]} onPress={() => nav.navigate("MyVehicles")}>
+            <Ionicons name="albums-outline" size={18} color={colors.primary} />
+            <Text style={styles.mineText}>My listings</Text>
+          </Pressable>
+        </View>
+      }
+      ListEmptyComponent={<EmptyState icon="car-outline" title="No vehicles listed" subtitle="Be the first — list your vehicle for sale." />}
       renderItem={({ item }) => (
         <Pressable style={styles.card} onPress={() => nav.navigate("VehicleDetail", { id: item.id, title: item.title })}>
           <Image source={{ uri: item.primary_image || PLACEHOLDER }} style={styles.img} contentFit="cover" />
@@ -50,6 +63,11 @@ export default function VehiclesScreen() {
         </Pressable>
       )}
     />
+      <Pressable style={styles.fab} onPress={() => nav.navigate("VehicleForm", {})}>
+        <Ionicons name="add" size={26} color={colors.white} />
+        <Text style={styles.fabText}>Sell</Text>
+      </Pressable>
+    </View>
   );
 }
 
@@ -73,4 +91,12 @@ const styles = StyleSheet.create({
   foot: { flexDirection: "row", justifyContent: "space-between", alignItems: "center", marginTop: spacing.sm },
   price: { fontWeight: "900", color: colors.primary, fontSize: font.h2 },
   city: { color: colors.textMuted, fontSize: font.small },
+  actionRow: { flexDirection: "row", gap: spacing.sm, marginBottom: spacing.xs },
+  actionBtn: { flex: 1, flexDirection: "row", alignItems: "center", justifyContent: "center", gap: 6, height: 46, borderRadius: radius.md },
+  sellBtn: { backgroundColor: colors.primary, ...shadow.soft },
+  sellText: { color: colors.white, fontWeight: "800" },
+  mineBtn: { backgroundColor: colors.surface, borderWidth: 1.5, borderColor: colors.primary },
+  mineText: { color: colors.primary, fontWeight: "800" },
+  fab: { position: "absolute", right: spacing.lg, bottom: spacing.lg, flexDirection: "row", alignItems: "center", gap: 4, backgroundColor: colors.primary, paddingHorizontal: 18, height: 52, borderRadius: radius.pill, ...shadow.card },
+  fabText: { color: colors.white, fontWeight: "800", fontSize: font.body },
 });
