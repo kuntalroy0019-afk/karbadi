@@ -2,13 +2,19 @@ import "react-native-gesture-handler";
 import { NavigationContainer, DefaultTheme } from "@react-navigation/native";
 import { StatusBar } from "expo-status-bar";
 import React, { useState } from "react";
+import { LogBox } from "react-native";
 import { GestureHandlerRootView } from "react-native-gesture-handler";
 import { SafeAreaProvider } from "react-native-safe-area-context";
 
+LogBox.ignoreLogs(["setLayoutAnimationEnabledExperimental"]);
+
 import { Splash } from "./src/components/Splash";
+import { enableLayoutAnimations } from "./src/components/motion";
 import { AuthProvider } from "./src/context/AuthContext";
 import RootNavigator from "./src/navigation/RootNavigator";
 import { colors } from "./src/theme";
+
+enableLayoutAnimations();
 
 const navTheme = {
   ...DefaultTheme,

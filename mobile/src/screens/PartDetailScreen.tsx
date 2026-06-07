@@ -6,6 +6,7 @@ import { Alert, Pressable, ScrollView, StyleSheet, Text, TextInput, View } from 
 
 import { apiError } from "../api/client";
 import { Catalog, Orders } from "../api/endpoints";
+import { haptic } from "../components/motion";
 import { Button, ConditionBadge, Loading } from "../components/ui";
 import { useAuth } from "../context/AuthContext";
 import { useCart } from "../context/CartContext";
@@ -37,8 +38,10 @@ export default function PartDetailScreen({ route }: any) {
     if (!user) return promptLogin();
     try {
       await add(part!.id, qty);
+      haptic.success();
       Alert.alert("Added to cart", `${qty} × ${part!.title}`);
     } catch (e) {
+      haptic.warning();
       Alert.alert("Error", apiError(e));
     }
   }

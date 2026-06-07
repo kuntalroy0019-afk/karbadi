@@ -13,6 +13,7 @@ import { useSafeAreaInsets } from "react-native-safe-area-context";
 
 import { Auth, Catalog } from "../api/endpoints";
 import { PartCard } from "../components/PartCard";
+import { FadeIn, PressableScale, haptic } from "../components/motion";
 import { useAuth } from "../context/AuthContext";
 import { useCart } from "../context/CartContext";
 import { colors, font, radius, shadow, spacing } from "../theme";
@@ -93,40 +94,44 @@ export default function HomeScreen() {
         refreshControl={<RefreshControl refreshing={refreshing} onRefresh={onRefresh} tintColor={colors.accent} />}
       >
         {/* Greeting */}
-        <View style={styles.greet}>
+        <FadeIn style={styles.greet} delay={40}>
           <Text style={styles.hi}>{greeting()}, {name}</Text>
           <Text style={styles.headline}>What are you{"\n"}looking for today?</Text>
-        </View>
+        </FadeIn>
 
         {/* 2x2 action grid */}
         <View style={styles.grid}>
-          {actions.map((a) => (
-            <Pressable key={a.key} style={styles.actionCard} onPress={a.onPress}>
-              <View style={styles.actionIcon}>
-                <Ionicons name={a.icon as any} size={22} color={colors.accent} />
-              </View>
-              <Text style={styles.actionTitle}>{a.title}</Text>
-              <Text style={styles.actionSub}>{a.sub}</Text>
-            </Pressable>
+          {actions.map((a, i) => (
+            <FadeIn key={a.key} delay={80 + i * 60} style={{ width: "47.5%" }}>
+              <PressableScale style={styles.actionCard} onPress={a.onPress}>
+                <View style={styles.actionIcon}>
+                  <Ionicons name={a.icon as any} size={22} color={colors.accent} />
+                </View>
+                <Text style={styles.actionTitle}>{a.title}</Text>
+                <Text style={styles.actionSub}>{a.sub}</Text>
+              </PressableScale>
+            </FadeIn>
           ))}
         </View>
 
         {/* Trust banner */}
-        <Pressable style={styles.trust} onPress={() => nav.navigate("Vendors")}>
-          <View>
-            <Text style={styles.trustTitle}>Trusted by 50,000+</Text>
-            <Text style={styles.trustSub}>Buyers & Sellers across India</Text>
-          </View>
-          <View style={styles.trustArrow}>
-            <Ionicons name="arrow-forward" size={18} color={colors.onAccent} />
-          </View>
-        </Pressable>
+        <FadeIn delay={340}>
+          <PressableScale style={styles.trust} onPress={() => nav.navigate("Vendors")} hapticStyle="medium">
+            <View>
+              <Text style={styles.trustTitle}>Trusted by 50,000+</Text>
+              <Text style={styles.trustSub}>Buyers & Sellers across India</Text>
+            </View>
+            <View style={styles.trustArrow}>
+              <Ionicons name="arrow-forward" size={18} color={colors.onAccent} />
+            </View>
+          </PressableScale>
+        </FadeIn>
 
         {/* Featured vendors */}
         <SectionHeader title="Featured Vendors" actionLabel="See all" onAction={() => nav.navigate("Vendors")} />
         <ScrollView horizontal showsHorizontalScrollIndicator={false} contentContainerStyle={styles.hList}>
           {vendors.map((v) => (
-            <Pressable key={v.id} style={styles.vendorCard} onPress={() => nav.navigate("SellerProfile", { id: v.id, name: v.shop_name })}>
+            <PressableScale key={v.id} style={styles.vendorCard} hapticStyle="light" onPress={() => nav.navigate("SellerProfile", { id: v.id, name: v.shop_name })}>
               <View style={styles.vendorLogo}>
                 <Text style={styles.vendorInitials}>{v.shop_name.slice(0, 2).toUpperCase()}</Text>
               </View>
@@ -135,7 +140,7 @@ export default function HomeScreen() {
                 <Ionicons name="shield-checkmark" size={12} color={colors.accent} />
                 <Text style={styles.vendorMetaText}>Verified · {v.rating}</Text>
               </View>
-            </Pressable>
+            </PressableScale>
           ))}
         </ScrollView>
 
@@ -143,10 +148,10 @@ export default function HomeScreen() {
         <SectionHeader title="Popular Categories" actionLabel="All" onAction={() => nav.navigate("Tabs", { screen: "Discover" })} />
         <ScrollView horizontal showsHorizontalScrollIndicator={false} contentContainerStyle={styles.hList}>
           {categories.map((c) => (
-            <Pressable key={c.id} style={styles.catChip} onPress={() => nav.navigate("CategoryParts", { id: c.id, name: c.name })}>
+            <PressableScale key={c.id} style={styles.catChip} hapticStyle="select" onPress={() => nav.navigate("CategoryParts", { id: c.id, name: c.name })}>
               <Ionicons name={CAT_ICONS[c.icon] || "cube-outline"} size={18} color={colors.text} />
               <Text style={styles.catText}>{c.name}</Text>
-            </Pressable>
+            </PressableScale>
           ))}
         </ScrollView>
 
@@ -189,7 +194,7 @@ const styles = StyleSheet.create({
   headline: { color: colors.text, fontSize: font.display, fontWeight: "700", lineHeight: 38 },
   grid: { flexDirection: "row", flexWrap: "wrap", paddingHorizontal: spacing.md, gap: spacing.md },
   actionCard: {
-    width: "47.5%", backgroundColor: colors.surface, borderRadius: radius.lg, padding: spacing.md,
+    width: "100%", backgroundColor: colors.surface, borderRadius: radius.lg, padding: spacing.md,
     borderWidth: 1, borderColor: colors.border, minHeight: 116, justifyContent: "space-between",
   },
   actionIcon: { width: 44, height: 44, borderRadius: radius.sm, backgroundColor: colors.accentSoft, alignItems: "center", justifyContent: "center" },

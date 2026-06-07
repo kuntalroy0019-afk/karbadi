@@ -1,13 +1,14 @@
 import { Ionicons } from "@expo/vector-icons";
 import { Image } from "expo-image";
 import React from "react";
-import { Pressable, StyleSheet, Text, View } from "react-native";
+import { StyleSheet, Text, View } from "react-native";
 
 import { colors, font, radius, shadow, spacing, formatINR } from "../theme";
 import { Part } from "../types";
-import { Badge, ConditionBadge } from "./ui";
+import { PressableScale } from "./motion";
+import { ConditionBadge } from "./ui";
 
-const PLACEHOLDER = "https://placehold.co/300x300/E8F0FF/1565FF?text=Karbadi";
+const PLACEHOLDER = "https://placehold.co/600x600/EFEDE7/234135?text=Karbadi";
 
 export function PartCard({
   part,
@@ -19,10 +20,7 @@ export function PartCard({
   width?: number;
 }) {
   return (
-    <Pressable
-      onPress={onPress}
-      style={({ pressed }) => [styles.card, width ? { width } : { flex: 1 }, pressed && { opacity: 0.9 }]}
-    >
+    <PressableScale onPress={onPress} style={[styles.card, width ? { width } : { flex: 1 }]} hapticStyle="light">
       <View style={styles.imageWrap}>
         <Image
           source={{ uri: part.primary_image || PLACEHOLDER }}
@@ -61,7 +59,7 @@ export function PartCard({
           </Text>
         </View>
       </View>
-    </Pressable>
+    </PressableScale>
   );
 }
 

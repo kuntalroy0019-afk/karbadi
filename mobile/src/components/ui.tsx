@@ -10,6 +10,7 @@ import {
 } from "react-native";
 
 import { colors, font, radius, shadow, spacing } from "../theme";
+import { PressableScale } from "./motion";
 
 export function Loading({ label }: { label?: string }) {
   return (
@@ -60,23 +61,19 @@ export function Button({
   const isPrimary = variant === "primary";
   const isDanger = variant === "danger";
   const isOutline = variant === "outline";
-  const bg = isPrimary
-    ? colors.primary
-    : isDanger
-    ? colors.accent
-    : isOutline
-    ? "transparent"
-    : "transparent";
-  const fg = isPrimary || isDanger ? colors.white : colors.primary;
+  const bg = isPrimary ? colors.accent : isDanger ? colors.error : "transparent";
+  const fg = isPrimary || isDanger ? colors.onAccent : colors.accent;
   return (
-    <Pressable
+    <PressableScale
       onPress={onPress}
       disabled={disabled || loading}
-      style={({ pressed }) => [
+      scaleTo={0.97}
+      hapticStyle={isDanger ? "warning" : "medium"}
+      style={[
         styles.btn,
-        { backgroundColor: bg, opacity: disabled ? 0.5 : pressed ? 0.85 : 1 },
-        isOutline && { borderWidth: 1.5, borderColor: colors.primary },
-        style,
+        { backgroundColor: bg, opacity: disabled ? 0.45 : 1 },
+        isOutline && { borderWidth: 1.5, borderColor: colors.accent },
+        style as any,
       ]}
     >
       {loading ? (
@@ -87,7 +84,7 @@ export function Button({
           <Text style={[styles.btnText, { color: fg }]}>{title}</Text>
         </View>
       )}
-    </Pressable>
+    </PressableScale>
   );
 }
 

@@ -5,6 +5,7 @@ import { Pressable, RefreshControl, ScrollView, StyleSheet, Text, View } from "r
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 
 import { Catalog, Orders } from "../api/endpoints";
+import { FadeIn, PressableScale } from "../components/motion";
 import { Loading } from "../components/ui";
 import { useAuth } from "../context/AuthContext";
 import { colors, font, formatINR, radius, shadow, spacing } from "../theme";
@@ -61,6 +62,7 @@ export default function DashboardScreen() {
         refreshControl={<RefreshControl refreshing={refreshing} onRefresh={onRefresh} tintColor={colors.accent} />}>
 
         {/* dark identity card */}
+        <FadeIn>
         <View style={styles.identity}>
           <View style={styles.idRow}>
             <View style={styles.idLogo}><Text style={styles.idInitials}>{(shop || "KB").slice(0, 2).toUpperCase()}</Text></View>
@@ -80,6 +82,7 @@ export default function DashboardScreen() {
             <IdStat value={`${sales.length}`} label="Orders" />
           </View>
         </View>
+        </FadeIn>
 
         <Text style={styles.section}>Today's Overview</Text>
         <View style={styles.metricGrid}>
@@ -139,10 +142,10 @@ function Metric({ icon, value, label }: any) {
 }
 function Action({ icon, label, onPress, primary }: any) {
   return (
-    <Pressable style={[styles.action, primary && { backgroundColor: colors.accent, borderColor: colors.accent }]} onPress={onPress}>
+    <PressableScale style={[styles.action, primary && { backgroundColor: colors.accent, borderColor: colors.accent }]} onPress={onPress} hapticStyle={primary ? "medium" : "light"}>
       <Ionicons name={icon} size={22} color={primary ? colors.onAccent : colors.accent} />
       <Text style={[styles.actionLabel, primary && { color: colors.onAccent }]}>{label}</Text>
-    </Pressable>
+    </PressableScale>
   );
 }
 

@@ -2,9 +2,10 @@ import { Ionicons } from "@expo/vector-icons";
 import { Image } from "expo-image";
 import { useFocusEffect, useNavigation } from "@react-navigation/native";
 import React, { useCallback } from "react";
-import { Pressable, ScrollView, StyleSheet, Text, View } from "react-native";
+import { LayoutAnimation, Pressable, ScrollView, StyleSheet, Text, View } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 
+import { haptic } from "../components/motion";
 import { Button, EmptyState } from "../components/ui";
 import { useAuth } from "../context/AuthContext";
 import { useCart } from "../context/CartContext";
@@ -17,6 +18,13 @@ export default function CartScreen() {
   const insets = useSafeAreaInsets();
   const { user } = useAuth();
   const { cart, refresh, setQty, remove } = useCart();
+
+  const animQty = (id: number, q: number) => { haptic.light(); setQty(id, q); };
+  const animRemove = (id: number) => {
+    LayoutAnimation.configureNext(LayoutAnimation.Presets.easeInEaseOut);
+    haptic.medium();
+    remove(id);
+  };
 
   useFocusEffect(useCallback(() => { refresh(); }, [refresh]));
 
@@ -48,15 +56,15 @@ export default function CartScreen() {
                   <Text numberOfLines={2} style={styles.title}>{item.part_detail.title}</Text>
                   <Text style={styles.price}>{formatINR(item.part_detail.price)}</Text>
                   <View style={styles.stepper}>
-                    <Pressable style={styles.stepBtn} onPress={() => setQty(item.id, item.quantity - 1)}>
+                    <Pressable style={styles.stepBtn} onPress={() => animQty(item.id, item.quantity - 1)}>
                       <Ionicons name="remove" size={16} color={colors.primary} />
                     </Pressable>
                     <Text style={styles.qty}>{item.quantity}</Text>
-                    <Pressable style={styles.stepBtn} onPress={() => setQty(item.id, item.quantity + 1)}>
+                    <Pressable style={styles.stepBtn} onPress={() => animQty(item.id, item.quantity + 1)}>
                       <Ionicons name="add" size={16} color={colors.primary} />
                     </Pressable>
                     <View style={{ flex: 1 }} />
-                    <Pressable onPress={() => remove(item.id)} hitSlop={8}>
+                    <Pressable onPress={() => animRemove(item.id)} hitSlop={8}>
                       <Ionicons name="trash-outline" size={20} color={colors.accent} />
                     </Pressable>
                   </View>

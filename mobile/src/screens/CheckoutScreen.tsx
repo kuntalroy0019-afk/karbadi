@@ -5,6 +5,7 @@ import { Alert, Pressable, ScrollView, StyleSheet, Text, TextInput, View } from 
 
 import { apiError } from "../api/client";
 import { Orders, Shipping } from "../api/endpoints";
+import { haptic } from "../components/motion";
 import { Button } from "../components/ui";
 import { useCart } from "../context/CartContext";
 import { colors, font, formatINR, radius, shadow, spacing } from "../theme";
@@ -70,8 +71,10 @@ export default function CheckoutScreen() {
     try {
       const { data } = await Orders.checkout({ ...form, payment_method: payment, courier_code: selected || "" });
       await refresh();
+      haptic.success();
       nav.replace("OrderDetail", { id: data.id });
     } catch (e) {
+      haptic.warning();
       Alert.alert("Checkout failed", apiError(e));
     } finally {
       setPlacing(false);

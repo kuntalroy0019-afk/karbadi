@@ -3,6 +3,7 @@ import React from "react";
 import { ActivityIndicator, Pressable, StyleSheet, Text, View, ViewStyle } from "react-native";
 
 import { colors, font, radius, shadow, spacing } from "../theme";
+import { PressableScale } from "./motion";
 
 export function Loading({ label }: { label?: string }) {
   return (
@@ -30,22 +31,23 @@ export function Button({ title, onPress, variant = "primary", loading, disabled,
   title: string; onPress?: () => void; variant?: "primary" | "outline" | "danger" | "success";
   loading?: boolean; disabled?: boolean; icon?: keyof typeof Ionicons.glyphMap; style?: ViewStyle;
 }) {
-  const bg = variant === "primary" ? colors.primary
-    : variant === "danger" ? colors.danger
+  const bg = variant === "primary" ? colors.accent
+    : variant === "danger" ? colors.error
     : variant === "success" ? colors.accent
     : "transparent";
-  const fg = variant === "outline" ? colors.primary : colors.white;
+  const fg = variant === "outline" ? colors.accent : colors.onAccent;
   return (
-    <Pressable onPress={onPress} disabled={disabled || loading}
-      style={({ pressed }) => [styles.btn, { backgroundColor: bg, opacity: disabled ? 0.5 : pressed ? 0.85 : 1 },
-        variant === "outline" && { borderWidth: 1.5, borderColor: colors.primary }, style]}>
+    <PressableScale onPress={onPress} disabled={disabled || loading} scaleTo={0.97}
+      hapticStyle={variant === "danger" ? "warning" : "medium"}
+      style={[styles.btn, { backgroundColor: bg, opacity: disabled ? 0.45 : 1 },
+        variant === "outline" && { borderWidth: 1.5, borderColor: colors.accent }, style as any]}>
       {loading ? <ActivityIndicator color={fg} /> : (
         <View style={styles.row}>
           {icon ? <Ionicons name={icon} size={18} color={fg} style={{ marginRight: 6 }} /> : null}
           <Text style={[styles.btnText, { color: fg }]}>{title}</Text>
         </View>
       )}
-    </Pressable>
+    </PressableScale>
   );
 }
 

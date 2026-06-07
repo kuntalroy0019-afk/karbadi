@@ -3,6 +3,7 @@ import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import React from "react";
 import { StyleSheet } from "react-native";
 
+import { haptic } from "../components/motion";
 import DashboardScreen from "../screens/DashboardScreen";
 import InquiriesScreen from "../screens/InquiriesScreen";
 import ListingsScreen from "../screens/ListingsScreen";
@@ -24,6 +25,7 @@ const ICONS: Record<string, [keyof typeof Ionicons.glyphMap, keyof typeof Ionico
 export default function TabNavigator() {
   return (
     <Tab.Navigator
+      screenListeners={{ tabPress: () => haptic.select() }}
       screenOptions={({ route }) => ({
         headerShown: false,
         tabBarActiveTintColor: colors.accent,
