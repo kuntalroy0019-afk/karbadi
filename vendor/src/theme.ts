@@ -1,40 +1,49 @@
-/** Karbadi Seller design system — a distinct, business-grade look that still
- *  belongs to the Karbadi family (blue primary) with a deep-navy "partner"
- *  header and an emerald accent for earnings/positive metrics. */
+/**
+ * Karbadi Seller design system — the operator's console.
+ * Same premium language as the buyer app (ivory + deep racing green), but a
+ * more "admin dashboard" register (Shopify / Stripe / Linear): dark-green
+ * identity surfaces, dense-but-calm metrics, restrained accents.
+ */
 export const colors = {
-  primary: "#1565FF",
-  primaryDark: "#0B2C6B",   // deep navy — distinguishes the seller app
-  primaryLight: "#E8F0FF",
-  navy: "#0B1F47",
-  accent: "#10B981",        // emerald — money / positive
-  accentSoft: "#D1FAE5",
-  danger: "#EF4444",
-  warning: "#F59E0B",
-  bg: "#F3F5FA",
+  bg: "#F8F6F1",
   surface: "#FFFFFF",
-  text: "#0F1B33",
-  textMuted: "#6B7790",
-  border: "#E4E8F0",
-  star: "#FFB400",
-  used: "#7C3AED",
-  new: "#16A34A",
+  surfaceAlt: "#F1EEE7",
+
+  text: "#111111",
+  textMuted: "#6B6B6B",
+  textFaint: "#9A968D",
+
+  border: "#E8E5DF",
+
+  accent: "#234135", // deep racing green
+  accentDark: "#192F26",
+  accentSoft: "#E7EDEA",
+  onAccent: "#F8F6F1",
+
+  error: "#C64B4B",
+  warning: "#D89A38",
+  star: "#D89A38",
+
+  // legacy aliases kept so existing vendor screens keep compiling
+  primary: "#234135",
+  primaryDark: "#192F26",
+  primaryLight: "#E7EDEA",
+  navy: "#192F26",
+  accentSoftLegacy: "#E7EDEA",
+  danger: "#C64B4B",
+  used: "#6B6B6B",
+  new: "#234135",
   white: "#FFFFFF",
-  shadow: "#0B1F47",
+  shadow: "#000000",
 };
 
-export const spacing = { xs: 4, sm: 8, md: 12, lg: 16, xl: 24, xxl: 32 };
-export const radius = { sm: 8, md: 12, lg: 16, xl: 22, pill: 999 };
-export const font = { h1: 26, h2: 20, h3: 17, body: 15, small: 13, tiny: 11 };
+export const spacing = { xs: 8, sm: 8, md: 16, lg: 16, xl: 24, xxl: 32, h: 40, hh: 48 };
+export const radius = { sm: 12, md: 16, lg: 20, xl: 24, pill: 999 };
+export const font = { display: 32, h1: 28, h2: 24, h3: 20, body: 16, small: 14, tiny: 12 };
 
 export const shadow = {
-  card: {
-    shadowColor: colors.shadow, shadowOffset: { width: 0, height: 4 },
-    shadowOpacity: 0.1, shadowRadius: 12, elevation: 3,
-  },
-  soft: {
-    shadowColor: colors.shadow, shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.06, shadowRadius: 6, elevation: 2,
-  },
+  card: { shadowColor: colors.shadow, shadowOffset: { width: 0, height: 2 }, shadowOpacity: 0.05, shadowRadius: 8, elevation: 2 },
+  soft: { shadowColor: colors.shadow, shadowOffset: { width: 0, height: 2 }, shadowOpacity: 0.04, shadowRadius: 6, elevation: 1 },
 };
 
 export function formatINR(value: number | string | null | undefined): string {

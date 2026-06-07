@@ -5,14 +5,15 @@ export type AuthStackParamList = {
 
 export type TabParamList = {
   Dashboard: undefined;
-  Listings: undefined;
-  Orders: undefined;
   Inquiries: undefined;
-  Store: undefined;
+  Orders: undefined;
+  Listings: undefined;
+  More: undefined;
 };
 
 export type RootStackParamList = {
   Tabs: undefined;
   PartForm: { id?: number };
   OrderDetail: { id: number };
+  Storefront: undefined;
 };

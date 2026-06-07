@@ -1,27 +1,31 @@
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import React from "react";
 
-import { useAuth } from "../context/AuthContext";
 import { Loading } from "../components/ui";
-import CheckoutScreen from "../screens/CheckoutScreen";
+import { useAuth } from "../context/AuthContext";
+import CartScreen from "../screens/CartScreen";
 import CategoryPartsScreen from "../screens/CategoryPartsScreen";
+import CheckoutScreen from "../screens/CheckoutScreen";
 import InquiriesScreen from "../screens/InquiriesScreen";
 import LoginScreen from "../screens/LoginScreen";
 import MyListingsScreen from "../screens/MyListingsScreen";
+import MyVehiclesScreen from "../screens/MyVehiclesScreen";
 import OemPartDetailScreen from "../screens/OemPartDetailScreen";
 import OemSearchScreen from "../screens/OemSearchScreen";
 import OrderDetailScreen from "../screens/OrderDetailScreen";
+import OrdersScreen from "../screens/OrdersScreen";
 import PartDetailScreen from "../screens/PartDetailScreen";
 import PartFormScreen from "../screens/PartFormScreen";
 import RegisterScreen from "../screens/RegisterScreen";
 import SalesScreen from "../screens/SalesScreen";
+import SearchScreen from "../screens/SearchScreen";
 import SellerDashboardScreen from "../screens/SellerDashboardScreen";
 import SellerProfileScreen from "../screens/SellerProfileScreen";
 import TrackingScreen from "../screens/TrackingScreen";
 import VehicleDetailScreen from "../screens/VehicleDetailScreen";
 import VehicleFormScreen from "../screens/VehicleFormScreen";
 import VehiclesScreen from "../screens/VehiclesScreen";
-import MyVehiclesScreen from "../screens/MyVehiclesScreen";
+import VendorsScreen from "../screens/VendorsScreen";
 import { colors } from "../theme";
 import TabNavigator from "./TabNavigator";
 import { RootStackParamList } from "./types";
@@ -29,9 +33,11 @@ import { RootStackParamList } from "./types";
 const Stack = createNativeStackNavigator<RootStackParamList>();
 
 const headerOptions = {
-  headerStyle: { backgroundColor: colors.primary },
-  headerTintColor: colors.white,
-  headerTitleStyle: { fontWeight: "700" as const },
+  headerStyle: { backgroundColor: colors.bg },
+  headerTintColor: colors.text,
+  headerTitleStyle: { fontWeight: "700" as const, color: colors.text },
+  headerShadowVisible: false,
+  contentStyle: { backgroundColor: colors.bg },
 };
 
 export default function RootNavigator() {
@@ -44,14 +50,18 @@ export default function RootNavigator() {
       <Stack.Screen name="Login" component={LoginScreen} options={{ headerShown: false }} />
       <Stack.Screen name="Register" component={RegisterScreen} options={{ title: "Create Account" }} />
       <Stack.Screen name="PartDetail" component={PartDetailScreen} options={{ title: "Part Details" }} />
+      <Stack.Screen name="PartSearch" component={SearchScreen} options={{ title: "Search Parts" }} />
       <Stack.Screen name="CategoryParts" component={CategoryPartsScreen} options={({ route }) => ({ title: route.params.name })} />
-      <Stack.Screen name="SellerProfile" component={SellerProfileScreen} options={{ title: "Seller" }} />
+      <Stack.Screen name="SellerProfile" component={SellerProfileScreen} options={{ title: "Vendor" }} />
+      <Stack.Screen name="Vendors" component={VendorsScreen} options={{ title: "Vendors" }} />
       <Stack.Screen name="Vehicles" component={VehiclesScreen} options={{ title: "Buy / Sell Vehicles" }} />
       <Stack.Screen name="VehicleDetail" component={VehicleDetailScreen} options={{ title: "Vehicle" }} />
       <Stack.Screen name="VehicleForm" component={VehicleFormScreen} options={({ route }) => ({ title: route.params?.id ? "Edit Vehicle" : "Sell Your Vehicle" })} />
       <Stack.Screen name="MyVehicles" component={MyVehiclesScreen} options={{ title: "My Vehicle Listings" }} />
       <Stack.Screen name="OemSearch" component={OemSearchScreen} options={{ title: "OEM Part Finder" }} />
       <Stack.Screen name="OemPartDetail" component={OemPartDetailScreen} options={{ title: "OEM Part" }} />
+      <Stack.Screen name="Cart" component={CartScreen} options={{ title: "My Cart" }} />
+      <Stack.Screen name="Orders" component={OrdersScreen} options={{ title: "My Orders" }} />
       <Stack.Screen name="OrderDetail" component={OrderDetailScreen} options={{ title: "Order" }} />
       <Stack.Screen name="Tracking" component={TrackingScreen} options={{ title: "Track Shipment" }} />
       <Stack.Screen name="Checkout" component={CheckoutScreen} options={{ title: "Checkout" }} />

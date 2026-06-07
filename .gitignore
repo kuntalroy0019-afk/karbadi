@@ -26,3 +26,6 @@ npm-debug.*
 
 # Claude Code local tooling state (per-machine permission grants, etc.)
 .claude/
+
+# Local run/screenshot scratch
+_run/

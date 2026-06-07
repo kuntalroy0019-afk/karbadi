@@ -7,15 +7,18 @@ import LoginScreen from "../screens/LoginScreen";
 import OrderDetailScreen from "../screens/OrderDetailScreen";
 import PartFormScreen from "../screens/PartFormScreen";
 import RegisterScreen from "../screens/RegisterScreen";
+import StorefrontScreen from "../screens/StorefrontScreen";
 import { colors } from "../theme";
 import TabNavigator from "./TabNavigator";
 
 const Stack = createNativeStackNavigator();
 
 const headerOptions = {
-  headerStyle: { backgroundColor: colors.primaryDark },
-  headerTintColor: colors.white,
-  headerTitleStyle: { fontWeight: "700" as const },
+  headerStyle: { backgroundColor: colors.bg },
+  headerTintColor: colors.text,
+  headerTitleStyle: { fontWeight: "700" as const, color: colors.text },
+  headerShadowVisible: false,
+  contentStyle: { backgroundColor: colors.bg },
 };
 
 export default function RootNavigator() {
@@ -35,6 +38,7 @@ export default function RootNavigator() {
           <Stack.Screen name="PartForm" component={PartFormScreen}
             options={({ route }: any) => ({ title: route.params?.id ? "Edit Listing" : "New Listing" })} />
           <Stack.Screen name="OrderDetail" component={OrderDetailScreen} options={{ title: "Order" }} />
+          <Stack.Screen name="Storefront" component={StorefrontScreen} options={{ title: "My Storefront" }} />
         </>
       )}
     </Stack.Navigator>

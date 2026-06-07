@@ -15,6 +15,10 @@ export type RootStackParamList = {
   Tracking: { shipmentId: number };
   Checkout: undefined;
   Inquiries: undefined;
+  Cart: undefined;
+  Orders: undefined;
+  Vendors: undefined;
+  PartSearch: undefined;
   SellerDashboard: undefined;
   MyListings: undefined;
   PartForm: { id?: number };
@@ -23,8 +27,8 @@ export type RootStackParamList = {
 
 export type TabParamList = {
   Home: undefined;
-  Categories: undefined;
-  Search: undefined;
-  Orders: undefined;
-  Cart: undefined;
+  Discover: undefined;
+  Messages: undefined;
+  Sell: undefined;
+  Account: undefined;
 };

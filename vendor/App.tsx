@@ -1,28 +1,31 @@
 import "react-native-gesture-handler";
 import { NavigationContainer, DefaultTheme } from "@react-navigation/native";
 import { StatusBar } from "expo-status-bar";
-import React from "react";
+import React, { useState } from "react";
 import { GestureHandlerRootView } from "react-native-gesture-handler";
 import { SafeAreaProvider } from "react-native-safe-area-context";
 
+import { Splash } from "./src/components/Splash";
 import { AuthProvider } from "./src/context/AuthContext";
 import RootNavigator from "./src/navigation/RootNavigator";
 import { colors } from "./src/theme";
 
 const navTheme = {
   ...DefaultTheme,
-  colors: { ...DefaultTheme.colors, background: colors.bg, primary: colors.primary },
+  colors: { ...DefaultTheme.colors, background: colors.bg, primary: colors.accent, card: colors.surface, text: colors.text, border: colors.border },
 };
 
 export default function App() {
+  const [splashDone, setSplashDone] = useState(false);
   return (
     <GestureHandlerRootView style={{ flex: 1 }}>
       <SafeAreaProvider>
         <AuthProvider>
           <NavigationContainer theme={navTheme}>
-            <StatusBar style="light" />
+            <StatusBar style="dark" />
             <RootNavigator />
           </NavigationContainer>
+          {!splashDone && <Splash onDone={() => setSplashDone(true)} />}
         </AuthProvider>
       </SafeAreaProvider>
     </GestureHandlerRootView>

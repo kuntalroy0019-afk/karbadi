@@ -6,19 +6,19 @@ import { StyleSheet } from "react-native";
 import DashboardScreen from "../screens/DashboardScreen";
 import InquiriesScreen from "../screens/InquiriesScreen";
 import ListingsScreen from "../screens/ListingsScreen";
+import MoreScreen from "../screens/MoreScreen";
 import SalesScreen from "../screens/SalesScreen";
-import StorefrontScreen from "../screens/StorefrontScreen";
-import { colors, shadow } from "../theme";
+import { colors, font } from "../theme";
 import { TabParamList } from "./types";
 
 const Tab = createBottomTabNavigator<TabParamList>();
 
 const ICONS: Record<string, [keyof typeof Ionicons.glyphMap, keyof typeof Ionicons.glyphMap]> = {
   Dashboard: ["grid", "grid-outline"],
-  Listings: ["pricetags", "pricetags-outline"],
-  Orders: ["receipt", "receipt-outline"],
   Inquiries: ["chatbubbles", "chatbubbles-outline"],
-  Store: ["storefront", "storefront-outline"],
+  Orders: ["receipt", "receipt-outline"],
+  Listings: ["pricetags", "pricetags-outline"],
+  More: ["ellipsis-horizontal-circle", "ellipsis-horizontal-circle-outline"],
 };
 
 export default function TabNavigator() {
@@ -26,25 +26,29 @@ export default function TabNavigator() {
     <Tab.Navigator
       screenOptions={({ route }) => ({
         headerShown: false,
-        tabBarActiveTintColor: colors.primary,
-        tabBarInactiveTintColor: colors.textMuted,
+        tabBarActiveTintColor: colors.accent,
+        tabBarInactiveTintColor: colors.textFaint,
         tabBarStyle: styles.tabBar,
-        tabBarLabelStyle: { fontSize: 11, fontWeight: "600" },
-        tabBarIcon: ({ color, size, focused }) => {
+        tabBarLabelStyle: { fontSize: font.tiny, fontWeight: "600", marginTop: 2 },
+        tabBarItemStyle: { paddingTop: 8 },
+        tabBarIcon: ({ color, focused }) => {
           const [on, off] = ICONS[route.name];
-          return <Ionicons name={focused ? on : off} size={size} color={color} />;
+          return <Ionicons name={focused ? on : off} size={23} color={color} />;
         },
       })}
     >
       <Tab.Screen name="Dashboard" component={DashboardScreen} />
-      <Tab.Screen name="Listings" component={ListingsScreen} />
-      <Tab.Screen name="Orders" component={SalesScreen} options={{ title: "Sales" }} />
       <Tab.Screen name="Inquiries" component={InquiriesScreen} />
-      <Tab.Screen name="Store" component={StorefrontScreen} />
+      <Tab.Screen name="Orders" component={SalesScreen} />
+      <Tab.Screen name="Listings" component={ListingsScreen} />
+      <Tab.Screen name="More" component={MoreScreen} />
     </Tab.Navigator>
   );
 }
 
 const styles = StyleSheet.create({
-  tabBar: { height: 64, paddingBottom: 8, paddingTop: 8, backgroundColor: colors.surface, borderTopWidth: 0, ...shadow.card },
+  tabBar: {
+    height: 66, paddingBottom: 8, paddingTop: 4, backgroundColor: colors.surface,
+    borderTopWidth: 1, borderTopColor: colors.border, elevation: 0,
+  },
 });

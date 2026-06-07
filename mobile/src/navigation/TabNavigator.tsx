@@ -1,100 +1,59 @@
 import { Ionicons } from "@expo/vector-icons";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import React from "react";
-import { StyleSheet, View } from "react-native";
+import { StyleSheet } from "react-native";
 
-import { useCart } from "../context/CartContext";
-import CartScreen from "../screens/CartScreen";
-import CategoriesScreen from "../screens/CategoriesScreen";
+import AccountScreen from "../screens/AccountScreen";
+import DiscoverScreen from "../screens/DiscoverScreen";
 import HomeScreen from "../screens/HomeScreen";
-import OrdersScreen from "../screens/OrdersScreen";
-import SearchScreen from "../screens/SearchScreen";
-import { colors, shadow } from "../theme";
+import MessagesScreen from "../screens/MessagesScreen";
+import SellScreen from "../screens/SellScreen";
+import { colors, font } from "../theme";
 import { TabParamList } from "./types";
-import { Text } from "react-native";
 
 const Tab = createBottomTabNavigator<TabParamList>();
 
+const ICONS: Record<string, [keyof typeof Ionicons.glyphMap, keyof typeof Ionicons.glyphMap]> = {
+  Home: ["home", "home-outline"],
+  Discover: ["compass", "compass-outline"],
+  Messages: ["chatbubbles", "chatbubbles-outline"],
+  Sell: ["pricetag", "pricetag-outline"],
+  Account: ["person", "person-outline"],
+};
+
 export default function TabNavigator() {
-  const { count } = useCart();
   return (
     <Tab.Navigator
       screenOptions={({ route }) => ({
         headerShown: false,
-        tabBarActiveTintColor: colors.primary,
-        tabBarInactiveTintColor: colors.textMuted,
+        tabBarActiveTintColor: colors.accent,
+        tabBarInactiveTintColor: colors.textFaint,
         tabBarStyle: styles.tabBar,
-        tabBarLabelStyle: { fontSize: 11, fontWeight: "600", marginTop: 2 },
-        tabBarIcon: ({ color, size, focused }) => {
-          // Center "Search" gets a raised circular button.
-          if (route.name === "Search") {
-            return (
-              <View style={styles.searchBtn}>
-                <Ionicons name="search" size={24} color={colors.white} />
-              </View>
-            );
-          }
-          const icons: Record<string, keyof typeof Ionicons.glyphMap> = {
-            Home: focused ? "home" : "home-outline",
-            Categories: focused ? "grid" : "grid-outline",
-            Orders: focused ? "receipt" : "receipt-outline",
-            Cart: focused ? "cart" : "cart-outline",
-          };
-          if (route.name === "Cart") {
-            return (
-              <View>
-                <Ionicons name={icons.Cart} size={size} color={color} />
-                {count > 0 && (
-                  <View style={styles.cartBadge}>
-                    <Text style={styles.cartBadgeText}>{count > 9 ? "9+" : count}</Text>
-                  </View>
-                )}
-              </View>
-            );
-          }
-          return <Ionicons name={icons[route.name]} size={size} color={color} />;
+        tabBarLabelStyle: { fontSize: font.tiny, fontWeight: "600", marginTop: 2 },
+        tabBarItemStyle: { paddingTop: 8 },
+        tabBarIcon: ({ color, focused }) => {
+          const [on, off] = ICONS[route.name];
+          return <Ionicons name={focused ? on : off} size={23} color={color} />;
         },
       })}
     >
       <Tab.Screen name="Home" component={HomeScreen} />
-      <Tab.Screen name="Categories" component={CategoriesScreen} />
-      <Tab.Screen name="Search" component={SearchScreen} options={{ tabBarLabel: "" }} />
-      <Tab.Screen name="Orders" component={OrdersScreen} />
-      <Tab.Screen name="Cart" component={CartScreen} options={{ title: "My Cart" }} />
+      <Tab.Screen name="Discover" component={DiscoverScreen} />
+      <Tab.Screen name="Messages" component={MessagesScreen} />
+      <Tab.Screen name="Sell" component={SellScreen} />
+      <Tab.Screen name="Account" component={AccountScreen} />
     </Tab.Navigator>
   );
 }
 
 const styles = StyleSheet.create({
   tabBar: {
-    height: 64,
+    height: 66,
     paddingBottom: 8,
-    paddingTop: 8,
+    paddingTop: 4,
     backgroundColor: colors.surface,
-    borderTopWidth: 0,
-    ...shadow.card,
+    borderTopWidth: 1,
+    borderTopColor: colors.border,
+    elevation: 0,
   },
-  searchBtn: {
-    width: 54,
-    height: 54,
-    borderRadius: 27,
-    backgroundColor: colors.primary,
-    alignItems: "center",
-    justifyContent: "center",
-    marginBottom: 18,
-    ...shadow.card,
-  },
-  cartBadge: {
-    position: "absolute",
-    top: -6,
-    right: -10,
-    backgroundColor: colors.accent,
-    minWidth: 18,
-    height: 18,
-    borderRadius: 9,
-    alignItems: "center",
-    justifyContent: "center",
-    paddingHorizontal: 4,
-  },
-  cartBadgeText: { color: colors.white, fontSize: 10, fontWeight: "800" },
 });
