@@ -2,6 +2,7 @@ from rest_framework import serializers
 
 from catalog.models import Part
 from catalog.serializers import PartListSerializer
+from karbadi import images as dummy
 
 from .models import Fitment, OemPart, RegistrationLookup, VehicleMake, VehicleModel
 
@@ -25,10 +26,18 @@ class VehicleModelSerializer(serializers.ModelSerializer):
 
 class OemPartListSerializer(serializers.ModelSerializer):
     category_name = serializers.CharField(source="category.name", read_only=True)
+    image = serializers.SerializerMethodField()
 
     class Meta:
         model = OemPart
         fields = ["id", "oem_number", "name", "category_name", "image", "mrp"]
+
+    def get_image(self, obj):
+        if obj.image:
+            request = self.context.get("request")
+            url = obj.image.url
+            return request.build_absolute_uri(url) if request else url
+        return dummy.oem_image(obj.id)
 
 
 class OemPartDetailSerializer(OemPartListSerializer):

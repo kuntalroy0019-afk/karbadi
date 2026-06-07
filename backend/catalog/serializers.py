@@ -1,6 +1,7 @@
 from rest_framework import serializers
 
 from accounts.serializers import SellerProfileSerializer
+from karbadi import images as dummy
 
 from .models import (
     Brand,
@@ -50,7 +51,7 @@ class PartListSerializer(serializers.ModelSerializer):
         img = obj.images.filter(is_primary=True).first() or obj.images.first()
         if img and img.image:
             return self.context["request"].build_absolute_uri(img.image.url)
-        return None
+        return dummy.part_image(obj.id)
 
     def get_seller_shop(self, obj):
         profile = getattr(obj.seller, "seller_profile", None)
@@ -125,7 +126,7 @@ class VehicleListSerializer(serializers.ModelSerializer):
         img = obj.images.filter(is_primary=True).first() or obj.images.first()
         if img and img.image:
             return self.context["request"].build_absolute_uri(img.image.url)
-        return None
+        return dummy.vehicle_image(obj.id)
 
 
 class VehicleDetailSerializer(VehicleListSerializer):
