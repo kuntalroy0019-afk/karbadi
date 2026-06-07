@@ -1,0 +1,25 @@
+# Python / Django
+backend_venv/
+__pycache__/
+*.pyc
+backend/db.sqlite3
+backend/media/
+backend/staticfiles/
+backend/.env
+
+# Node / Expo
+mobile/node_modules/
+mobile/.expo/
+mobile/dist/
+mobile/web-build/
+vendor/node_modules/
+vendor/.expo/
+vendor/dist/
+vendor/web-build/
+npm-debug.*
+
+# OS / IDE
+.DS_Store
+*.log
+.idea/
+.vscode/

@@ -1,0 +1,101 @@
+{% extends "unfold/layouts/base_simple.html" %}
+{% load i18n humanize %}
+
+{% block breadcrumbs %}{% endblock %}
+
+{% block content %}
+<div class="flex flex-col gap-6">
+
+  {# ---- KPI cards ---- #}
+  <div class="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4">
+    {% for kpi in kpis %}
+    <div class="border border-base-200 bg-white rounded-default shadow-xs p-5 dark:bg-base-900 dark:border-base-800">
+      <div class="flex items-center justify-between">
+        <span class="text-font-important-light text-sm font-semibold dark:text-font-important-dark">{{ kpi.title }}</span>
+        <span class="material-symbols-outlined text-primary-600 dark:text-primary-500">{{ kpi.icon }}</span>
+      </div>
+      <div class="mt-3 text-3xl font-bold text-font-important-light dark:text-font-important-dark">{{ kpi.value }}</div>
+      <div class="mt-1 text-xs text-font-subtle-light dark:text-font-subtle-dark">{{ kpi.footer }}</div>
+    </div>
+    {% endfor %}
+  </div>
+
+  {# ---- quick alerts ---- #}
+  <div class="grid grid-cols-1 gap-4 sm:grid-cols-3">
+    <div class="flex items-center gap-3 border border-base-200 bg-white rounded-default p-4 dark:bg-base-900 dark:border-base-800">
+      <span class="material-symbols-outlined text-amber-500">forum</span>
+      <div><div class="text-lg font-bold">{{ open_inquiries }}</div><div class="text-xs text-font-subtle-light">Open inquiries</div></div>
+    </div>
+    <div class="flex items-center gap-3 border border-base-200 bg-white rounded-default p-4 dark:bg-base-900 dark:border-base-800">
+      <span class="material-symbols-outlined text-red-500">warning</span>
+      <div><div class="text-lg font-bold">{{ low_stock }}</div><div class="text-xs text-font-subtle-light">Parts low on stock (≤2)</div></div>
+    </div>
+    <div class="flex items-center gap-3 border border-base-200 bg-white rounded-default p-4 dark:bg-base-900 dark:border-base-800">
+      <span class="material-symbols-outlined text-primary-600">directions_car</span>
+      <div><div class="text-lg font-bold">{{ vehicles_for_sale }}</div><div class="text-xs text-font-subtle-light">Vehicles for sale</div></div>
+    </div>
+  </div>
+
+  <div class="grid grid-cols-1 gap-6 lg:grid-cols-3">
+    {# ---- orders by status ---- #}
+    <div class="lg:col-span-2 border border-base-200 bg-white rounded-default p-5 dark:bg-base-900 dark:border-base-800">
+      <h2 class="text-sm font-semibold mb-4 text-font-important-light dark:text-font-important-dark">Orders by status</h2>
+      <div class="flex flex-col gap-3">
+        {% for row in order_status %}
+        <div>
+          <div class="flex justify-between text-xs mb-1">
+            <span class="font-medium">{{ row.label }}</span>
+            <span class="text-font-subtle-light">{{ row.count }} ({{ row.percent }}%)</span>
+          </div>
+          <div class="h-2 w-full bg-base-100 rounded-full overflow-hidden dark:bg-base-800">
+            <div class="h-full bg-primary-500 rounded-full" style="width: {{ row.percent }}%"></div>
+          </div>
+        </div>
+        {% empty %}
+        <p class="text-sm text-font-subtle-light">No orders yet.</p>
+        {% endfor %}
+      </div>
+    </div>
+
+    {# ---- shipments by courier ---- #}
+    <div class="border border-base-200 bg-white rounded-default p-5 dark:bg-base-900 dark:border-base-800">
+      <h2 class="text-sm font-semibold mb-4 text-font-important-light dark:text-font-important-dark">Shipments by courier</h2>
+      <div class="flex flex-col gap-3">
+        {% for row in shipments_by_courier %}
+        <div class="flex items-center justify-between">
+          <span class="flex items-center gap-2 text-sm"><span class="material-symbols-outlined text-base text-primary-600">local_shipping</span>{{ row.label }}</span>
+          <span class="font-bold">{{ row.count }}</span>
+        </div>
+        {% empty %}
+        <p class="text-sm text-font-subtle-light">No shipments yet.</p>
+        {% endfor %}
+      </div>
+    </div>
+  </div>
+
+  {# ---- recent orders ---- #}
+  <div class="border border-base-200 bg-white rounded-default p-5 dark:bg-base-900 dark:border-base-800">
+    <h2 class="text-sm font-semibold mb-4 text-font-important-light dark:text-font-important-dark">Recent orders</h2>
+    <table class="w-full text-sm">
+      <thead>
+        <tr class="text-left text-xs text-font-subtle-light border-b border-base-200 dark:border-base-800">
+          <th class="py-2">Order</th><th>Buyer</th><th>Status</th><th class="text-right">Total</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for o in recent_orders %}
+        <tr class="border-b border-base-100 dark:border-base-800">
+          <td class="py-2 font-mono">{{ o.order_number }}</td>
+          <td>{{ o.buyer__username }}</td>
+          <td><span class="px-2 py-0.5 rounded-full text-xs bg-primary-50 text-primary-700 dark:bg-primary-500/20 dark:text-primary-300">{{ o.status|title }}</span></td>
+          <td class="text-right font-semibold">{{ o.grand_total }}</td>
+        </tr>
+        {% empty %}
+        <tr><td colspan="4" class="py-3 text-font-subtle-light">No orders yet.</td></tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+
+</div>
+{% endblock %}
