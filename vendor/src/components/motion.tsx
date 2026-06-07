@@ -8,6 +8,8 @@ import * as Haptics from "expo-haptics";
 import React, { useEffect, useRef } from "react";
 import { Animated, Easing, Platform, Pressable, ViewStyle } from "react-native";
 
+const AnimatedPressable = Animated.createAnimatedComponent(Pressable);
+
 export const haptic = {
   light: () => Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light).catch(() => {}),
   medium: () => Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Medium).catch(() => {}),
@@ -40,7 +42,7 @@ export function PressableScale({
     Animated.spring(scale, { toValue: v, useNativeDriver: true, speed: 40, bounciness: 0 }).start();
 
   return (
-    <Pressable
+    <AnimatedPressable
       disabled={disabled}
       hitSlop={hitSlop}
       onPressIn={() => {
@@ -49,9 +51,10 @@ export function PressableScale({
       }}
       onPressOut={() => to(1)}
       onPress={onPress}
+      style={[style as any, { transform: [{ scale }] }]}
     >
-      <Animated.View style={[{ transform: [{ scale }] }, style as any]}>{children}</Animated.View>
-    </Pressable>
+      {children}
+    </AnimatedPressable>
   );
 }
 
