@@ -23,3 +23,6 @@ npm-debug.*
 *.log
 .idea/
 .vscode/
+
+# Claude Code local tooling state (per-machine permission grants, etc.)
+.claude/

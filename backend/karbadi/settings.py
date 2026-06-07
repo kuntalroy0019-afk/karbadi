@@ -24,9 +24,23 @@ def env_bool(key, default=False):
 
 
 # --- Core -----------------------------------------------------------------
-SECRET_KEY = env("DJANGO_SECRET_KEY", "django-insecure-dev-key-change-me-in-production-0xkarbadi")
 DEBUG = env_bool("DJANGO_DEBUG", True)
-ALLOWED_HOSTS = env("DJANGO_ALLOWED_HOSTS", "*").split(",")
+
+# A dev fallback key is allowed only while DEBUG is on. In production
+# (DEBUG=False) a real DJANGO_SECRET_KEY MUST be supplied, or we refuse to boot.
+SECRET_KEY = env("DJANGO_SECRET_KEY")
+if not SECRET_KEY:
+    if DEBUG:
+        SECRET_KEY = "django-insecure-dev-key-change-me-in-production-0xkarbadi"
+    else:
+        from django.core.exceptions import ImproperlyConfigured
+        raise ImproperlyConfigured(
+            "DJANGO_SECRET_KEY environment variable is required when DEBUG=False."
+        )
+
+# Be strict about hosts in production; permissive only in DEBUG.
+_default_hosts = "*" if DEBUG else ""
+ALLOWED_HOSTS = [h.strip() for h in env("DJANGO_ALLOWED_HOSTS", _default_hosts).split(",") if h.strip()]
 
 # Cloudinary is enabled automatically when credentials are present (see below).
 USE_CLOUDINARY = bool(env("CLOUDINARY_URL") or env("CLOUDINARY_CLOUD_NAME"))
@@ -181,7 +195,12 @@ SIMPLE_JWT = {
 }
 
 # --- CORS -----------------------------------------------------------------
-CORS_ALLOW_ALL_ORIGINS = env_bool("CORS_ALLOW_ALL", True)
+# Open by default in DEBUG; in production allow all only if explicitly opted in,
+# otherwise restrict to an allowlist from CORS_ALLOWED_ORIGINS (comma-separated).
+CORS_ALLOW_ALL_ORIGINS = env_bool("CORS_ALLOW_ALL", DEBUG)
+CORS_ALLOWED_ORIGINS = [
+    o.strip() for o in env("CORS_ALLOWED_ORIGINS", "").split(",") if o.strip()
+]
 CORS_ALLOW_CREDENTIALS = True
 
 # --- Karbadi / integration settings --------------------------------------

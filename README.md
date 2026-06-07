@@ -4,6 +4,31 @@ India's auto-parts marketplace connecting workshops, spare-part dealers, retaile
 vehicle owners for **New & Used Auto Parts** — plus whole-vehicle buy/sell, OEM catalogue
 search, smart courier delivery and order tracking.
 
+## ⚡ Quickstart (clone & run)
+
+```bash
+git clone https://github.com/kuntalroy0019-afk/karbadi.git
+cd karbadi
+
+# 1) Backend
+python -m venv backend_venv
+backend_venv/Scripts/pip install -r backend/requirements.txt    # macOS/Linux: backend_venv/bin/pip
+cd backend
+../backend_venv/Scripts/python manage.py migrate
+../backend_venv/Scripts/python manage.py seed                   # demo data + logins
+../backend_venv/Scripts/python manage.py runserver 0.0.0.0:8000
+
+# 2) Buyer app           # 3) Vendor app
+cd ../mobile             cd ../vendor
+npm install              npm install
+npx expo start           npx expo start
+```
+
+Point each app at the backend in its `src/config.ts` (or `EXPO_PUBLIC_API_URL`).
+Copy `backend/.env.example` → `backend/.env` to add Cloudinary / courier / OEM keys.
+**Production:** set `DJANGO_DEBUG=false` and a real `DJANGO_SECRET_KEY` (the app refuses to
+boot without one), plus `DJANGO_ALLOWED_HOSTS` and `CORS_ALLOWED_ORIGINS`.
+
 Built from scratch:
 
 | Layer | Stack |
